@@ -24,6 +24,7 @@ describe('Create Release', () => {
       owner: 'owner',
       repo: 'repo'
     };
+    context.sha = 'sha';
 
     const github = {
       repos: {
@@ -52,7 +53,8 @@ describe('Create Release', () => {
       name: 'myRelease',
       body: 'myBody',
       draft: false,
-      prerelease: false
+      prerelease: false,
+      target_commitish: 'sha'
     });
   });
 
@@ -74,7 +76,8 @@ describe('Create Release', () => {
       name: 'myRelease',
       body: 'myBody',
       draft: true,
-      prerelease: false
+      prerelease: false,
+      target_commitish: 'sha'
     });
   });
 
@@ -96,7 +99,8 @@ describe('Create Release', () => {
       name: 'myRelease',
       body: 'myBody',
       draft: false,
-      prerelease: true
+      prerelease: true,
+      target_commitish: 'sha'
     });
   });
 
@@ -118,7 +122,8 @@ describe('Create Release', () => {
       name: 'myRelease',
       body: '',
       draft: false,
-      prerelease: false
+      prerelease: false,
+      target_commitish: 'sha'
     });
   });
 
@@ -130,6 +135,7 @@ describe('Create Release', () => {
       .mockReturnValueOnce('') // <-- The default value for body in action.yml
       .mockReturnValueOnce('false')
       .mockReturnValueOnce('false')
+      .mockReturnValueOnce(null)
       .mockReturnValueOnce('notes.md');
 
     fs.readFileSync = jest.fn().mockReturnValueOnce('# this is a release\nThe markdown is strong in this one.');
@@ -143,7 +149,8 @@ describe('Create Release', () => {
       name: 'myRelease',
       body: '# this is a release\nThe markdown is strong in this one.',
       draft: false,
-      prerelease: false
+      prerelease: false,
+      target_commitish: 'sha'
     });
   });
 

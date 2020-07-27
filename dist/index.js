@@ -7861,16 +7861,17 @@ async function run() {
 
     // This removes the 'refs/tags' portion of the string, i.e. from 'refs/tags/v1.10.15' to 'v1.10.15'
     const tag = tagName.replace('refs/tags/', '');
-    const releaseName = core.getInput('release_name').replace('refs/tags/', '');
+    const releaseName = core.getInput('release_name', { required: false }).replace('refs/tags/', '');
     const body = core.getInput('body', { required: false });
     const draft = core.getInput('draft', { required: false }) === 'true';
     const prerelease = core.getInput('prerelease', { required: false }) === 'true';
+    const commitish = core.getInput('commitish', { required: false }) || context.sha;
 
-    const body_file = core.getInput('body_file', { required: false });
+    const bodyPath = core.getInput('body_path', { required: false });
     let bodyFileContent = null;
-    if (body_file !== '' && !!body_file) {
+    if (bodyPath !== '' && !!bodyPath) {
       try {
-        bodyFileContent = fs.readFileSync(body_file, { encoding: 'utf8' });
+        bodyFileContent = fs.readFileSync(bodyPath, { encoding: 'utf8' });
       } catch (error) {
         core.setFailed(error.message);
       }
@@ -7886,7 +7887,8 @@ async function run() {
       name: releaseName,
       body: bodyFileContent || body,
       draft,
-      prerelease
+      prerelease,
+      target_commitish: commitish
     });
 
     // Get the ID, html_url, and upload URL for the created Release from the response
